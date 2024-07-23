@@ -1,3 +1,5 @@
 venvrestreviews/
 __pycache__/
 *.pyc
+DataSet/
+archive.zip
