@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 DataSet/
 archive.zip
+cleaned_reviews.csv
