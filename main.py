@@ -1,3 +1,6 @@
+import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from transformers import BertTokenizer, TFBertForSequenceClassification
@@ -7,8 +10,8 @@ import tensorflow as tf
 app = FastAPI()
 
 # Загрузка предобученного токенизатора и модели
-tokenizer = BertTokenizer.from_pretrained('sentiment_model')
-model = TFBertForSequenceClassification.from_pretrained('sentiment_model')
+tokenizer = BertTokenizer.from_pretrained('./model10/tokenizer10')
+model = TFBertForSequenceClassification.from_pretrained('./model10/sentiment_model10')
 
 # Модель данных для входного запроса
 class Review(BaseModel):
@@ -43,9 +46,14 @@ def classify_review(review: Review):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+# Маршрут для обработки GET-запросов 
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the sentiment analysis API. Use POST /classify to classify reviews."}
 
 # Запуск приложения с помощью Uvicorn           # uvicorn main:app --reload --port 8888
-if __name__ == "__main__":
+if __name__ == "__main__":                      # uvicorn main:app --reload --port=8888
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8888)
 
