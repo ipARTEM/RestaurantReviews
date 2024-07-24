@@ -57,6 +57,6 @@ if __name__ == "__main__":                      # uvicorn main:app --reload --po
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8888)
 
-# запроса с использованием curl:
-# curl -X POST http://127.0.0.1:8888/classify -H "Content-Type: application/json" -d '{"review": "The food was amazing and the service was excellent!"}'
+# Пример запроса с использованием curl:
+# curl -X POST http://127.0.0.1:8888/classify -H "Content-Type: application/json" -d '{"review": "The food was amazing and the service was excellent"}'
 
