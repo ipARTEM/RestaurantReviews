@@ -16,18 +16,14 @@ class UserMessage(BaseModel):
 @app.post("/chat")
 def chat_with_openai(user_message: UserMessage):
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": user_message.message}
-            ],
+        response = openai.Completion.create(
+            engine="davinci",
+            prompt=f"User: {user_message.message}\nAssistant:",
             max_tokens=150,
             temperature=0.9,
         )
-        answer = response.choices[0].message["content"].strip()
+        answer = response.choices[0].text.strip()
         return {"response": answer}
-
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -35,3 +31,7 @@ def chat_with_openai(user_message: UserMessage):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+
+# .\venvrestreviews\Scripts\activate  
+# uvicorn chatbot:app --reload --port 8000

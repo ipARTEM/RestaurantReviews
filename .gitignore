@@ -8,3 +8,4 @@ sentiment_model.keras
 sentiment_model
 model10
 model100
+openaikey.py
