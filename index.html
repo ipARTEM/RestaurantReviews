@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with OpenAI</title>
+    <style>
+        /* Ваши стили здесь */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #chat-container {
+            width: 500px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        #messages {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .message.user {
+            background-color: #e0e0e0;
+            align-self: flex-end;
+        }
+        .message.bot {
+            background-color: #d1e7dd;
+            align-self: flex-start;
+        }
+        #input-container {
+            display: flex;
+            border-top: 1px solid #ddd;
+        }
+        #input-container input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+        }
+        #input-container button {
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        #input-container button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div id="chat-container">
+    <div id="messages"></div>
+    <div id="input-container">
+        <input type="text" id="prompt" placeholder="Type your message here...">
+        <button onclick="sendPrompt()">Send</button>
+    </div>
+</div>
+
+<script>
+    async function sendPrompt() {
+        const prompt = document.getElementById("prompt").value;
+        if (prompt.trim() === "") return;
+
+        const userMessage = document.createElement("div");
+        userMessage.className = "message user";
+        userMessage.innerText = prompt;
+        document.getElementById("messages").appendChild(userMessage);
+        document.getElementById("prompt").value = "";
+
+        try {
+            const response = await fetch("https://733d-34-125-13-154.ngrok-free.app/chat", {  // Замените на ваш актуальный ngrok URL
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ prompt: prompt })
+            });
+
+            const data = await response.json();
+
+            const botMessage = document.createElement("div");
+            botMessage.className = "message bot";
+            
+            if (data.response) {
+                botMessage.innerText = data.response;
+            } else {
+                botMessage.innerText = "No response from bot.";
+            }
+
+            document.getElementById("messages").appendChild(botMessage);
+        } catch (error) {
+            const errorMessage = document.createElement("div");
+            errorMessage.className = "message bot";
+            errorMessage.innerText = "Error: " + error.message;
+            document.getElementById("messages").appendChild(errorMessage);
+        }
+
+        // Автоматическая прокрутка вниз
+        document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+    }
+</script>
+
+</body>
+</html>
